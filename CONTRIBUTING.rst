@@ -88,3 +88,4 @@ Join the community on slack!
 
 .. |ImageLink| image:: https://user-images.githubusercontent.com/15258498/89115901-60fe5c00-d4ab-11ea-9987-6dc1770ab01e.png
 .. _ImageLink: https://join.slack.com/t/p5py/shared_invite/zt-g9uo4vph-dUVltiE1ixvmjFTCyRlzpQ
+    :width: 100
