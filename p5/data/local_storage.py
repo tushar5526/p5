@@ -1,5 +1,5 @@
 """
- * This module defines the p5 methods for working with local storage
+# This module defines the p5 methods for working with local storage
 """
 
 import pathlib
