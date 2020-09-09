@@ -25,4 +25,5 @@ jobs:
     - name: Run Tests
       run: |
         sudo apt-get install python-opengl
+        sudo apt-get install libglfw3-dev
         pytest -svv p5
