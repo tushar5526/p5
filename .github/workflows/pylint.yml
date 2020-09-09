@@ -22,4 +22,5 @@ jobs:
     - name: Test with pytest
       run: |
         pylint --disable=I --disable=W --disable=C --disable=R `find .  -path ./profiling -prune -false -o -name '*.py'`
-        pytest -svv .
+    - name: Run Tests
+      uses: skx/github-action-tester@release-0.10
