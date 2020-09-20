@@ -1,6 +1,6 @@
 Contributing to p5
 ==================
-
+s
 Thank you for considering contributing to p5! We are still a very
 small project and it's amazing that you want to help out! There are
 many ways you can help make p5 better; you can, for instance:
