@@ -1,0 +1,1 @@
+for f in check_tests/*.py; do python "$f"; done
