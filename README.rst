@@ -1,4 +1,6 @@
-check_tests folder contains all examples present at p5's read the docs.
+**check_tests** folder contains all examples present at p5's read the docs.
+
+
 ```
 bash run_tests.sh
 ```
