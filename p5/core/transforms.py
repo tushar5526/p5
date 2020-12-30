@@ -125,7 +125,7 @@ def rotate_y(theta):
     :param theta: angle by which to rotate (in radians)
     :type theta: float
 
-    :returns: The rotation matrix used to apply the transformation.
+    :returns: The rotation matrix used to apply the transformation.+++
     :rtype: np.ndarray
 
    """

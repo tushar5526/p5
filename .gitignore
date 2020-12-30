@@ -114,3 +114,5 @@ profiling/*.prof
 
 # IntelliJ's project specific settings files
 .idea/
+
+check_tests/*.py

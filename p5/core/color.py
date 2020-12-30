@@ -113,7 +113,6 @@ def parse_color(*args, color_mode='RGB', normed=False, **kwargs):
 
     hsb = None
     rgb = None
-
     if len(args) == 1:
         if isinstance(args[0], int) or isinstance(args[0], float):
             gray = args[0]

@@ -292,7 +292,7 @@ class VispyRenderer2D(OpenGLRenderer):
 
         self.line_prog.draw('triangles')
 
-    def render_image(self, image, location, size):
+    def render_ (self, image, location, size):
         """Render the image.
 
         :param image: image to be rendered
