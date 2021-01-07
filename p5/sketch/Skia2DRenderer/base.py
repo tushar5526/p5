@@ -6,6 +6,7 @@ from OpenGL import GL
 from time import time
 from time import time
 
+
 #
 # class SkiaSketch():
 #     def __init__(self, setup_method, draw_method,
@@ -54,6 +55,12 @@ class SkiaSketch():
         self.paint.setAntiAlias(True)
         self.path = skia.Path()
         self.frame_rate = frame_rate
+        self.redraw = False
+
+        # Boolean to check when a window is resized completely
+        # Resizing depends on glfw callbacks, see the callback handlers
+        self.resized = True
+        builtins.frame_count = 0
 
     @property
     def size(self):
@@ -93,6 +100,7 @@ class SkiaSketch():
     def assign_callbacks(self):
         glfw.set_cursor_pos_callback(self.window, self.mouse_callback_handler)
         glfw.set_framebuffer_size_callback(self.window, self.frame_buffer_resize_callback_handler)
+        glfw.set_mouse_button_callback(self.window, self.mouse_button_callback_handler)
 
     def create_surface(self, size=None):
         print("create surface")
@@ -109,16 +117,36 @@ class SkiaSketch():
             self.main_loop_state = False
 
     def main_loop(self):
-        last_render_call_time = time()
+        last_render_call_time = 0
+
+        # Before starting the main while loop, check whether no_loop is called
+        # If called we have to render a frame once
+        # Set redraw and looping to False
+        # This is done to ensure draw() is called atleast once
+        print("looping ", self.looping)
+        if not self.looping:
+            self.redraw = True
+            self.looping = True
+
         while (self.main_loop_state):
-            if self.looping and (time() - last_render_call_time) > 1/self.frame_rate:
+
+            if self.redraw:
+                self.looping = True
+
+            if self.looping and (time() - last_render_call_time) > 1 / self.frame_rate:
                 builtins.frame_count += 1
                 with self.surface as self.canvas:
                     self.draw_method()
+                    print("renderer called")
                     p5.renderer.render()
                 self.surface.flushAndSubmit()
                 glfw.swap_buffers(self.window)
                 last_render_call_time = time()
+                # If redraw = True, we have rendered the frame once
+                # Now don't render the next one
+                if self.redraw:
+                    self.looping = False
+                    self.redraw = False
             self.poll_events()
 
     def start(self):
@@ -136,24 +164,49 @@ class SkiaSketch():
         self.main_loop()
         self.clean_up()
 
-    def mouse_callback_handler(self, window, xpos, ypos):
-        # print(xpos, ypos)
-        self.mouseX = xpos
-        self.mouseY = ypos
-        return
+    def resize(self):
+        # re-create a new canvas with new size
+        self.create_surface()
+        glfw.set_window_size(self.window, *self.size)
+        self.resized = False
+        print(glfw.get_framebuffer_size(self.window), self._size, glfw.get_window_size(self.window))
 
     def frame_buffer_resize_callback_handler(self, window, width, height):
-        print("FRAME BUFFER CALLBACK NOW ")
-        print("frame buffer size callback ", glfw.get_window_size(self.window))
+        """
+        Gets called whenever frame buffer resizes
+        Values of width and height may not be equal to the actual window's width and height
+        in Retina Display
+        """
+
+        # print("FRAME BUFFER CALLBACK NOW ")
+        # print("frame buffer size callback ", glfw.get_window_size(self.window))
         GL.glViewport(0, 0, width, height)
         self.create_surface(size=(width, height))
         with self.surface as self.canvas:
-            p5.renderer.render()
+            # redraw on the canvas/ ( new frame buffer ) after resizing
+            # and do not rewind/clear the path
+            p5.renderer.render(rewind=False)
         self.surface.flushAndSubmit()
         glfw.swap_buffers(self.window)
+        self.resized = True
 
-    def resize(self):
-        self.create_surface()
-        glfw.set_window_size(self.window, *self.size)
+    def mouse_callback_handler(self, window, xpos, ypos):
 
-        print(glfw.get_framebuffer_size(self.window), self._size, glfw.get_window_size(self.window))
+        self.mouseX = xpos
+        self.mouseY = ypos
+
+    def mouse_button_callback_handler(self, window, button, action, mods):
+        # If a mouse button is pressed
+        if action == glfw.PRESS:
+
+            # Changing the values manually, at the end we will have an event handler
+            # similar to vispy
+            if button == glfw.MOUSE_BUTTON_LEFT:
+                self.redraw = True
+            if button == glfw.MOUSE_BUTTON_RIGHT:
+                self.looping = True
+
+        # If a mouse button is released
+        if action == glfw.RELEASE:
+            # set environment variables
+            pass

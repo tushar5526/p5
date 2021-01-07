@@ -1,6 +1,8 @@
 import contextlib, glfw, skia
 from OpenGL import GL
 
+from p5 import p5
+
 class SkiaRenderer():
     def __init__(self):
         self.canvas = None
@@ -25,14 +27,15 @@ class SkiaRenderer():
         self.path.addCircle(x, y, radius)
 
     def render(self, rewind=True):
-        # print(self.path.countVerbs())
+        print(self.path.countVerbs())
         # print(self.canvas)
-        # print("RENDER NOW")
+        print("RENDER NOW")
         self.paint.setColor(skia.ColorRED)
         self.paint.setStyle(skia.Paint.kFill_Style)
         self.canvas.drawPath(self.path, self.paint)
         self.paint.setColor(skia.ColorCYAN)
         self.paint.setStyle(skia.Paint.kStroke_Style)
         self.canvas.drawPath(self.path, self.paint)
-        if rewind:
+        if rewind and p5.sketch.resized:
+            print("REWINDED")
             self.path.rewind()
