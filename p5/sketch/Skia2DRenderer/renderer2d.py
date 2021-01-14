@@ -3,6 +3,7 @@ from OpenGL import GL
 
 from p5 import p5
 
+
 class SkiaRenderer():
     def __init__(self):
         self.canvas = None
@@ -22,11 +23,25 @@ class SkiaRenderer():
         self.path.lineTo(x + w, y)
         self.path.lineTo(x + w, y + h)
         self.path.lineTo(x, y + h)
+        self.render()
 
     def render_circle(self, x, y, radius):
         self.path.addCircle(x, y, radius)
+        self.render()
+
+    def render_text(self, text, x, y):
+        font = skia.Font()
+        self.canvas.drawSimpleText(text, x, y, font, self.paint)
+        print("Called render text")
+        # self.canvas.drawText(text, x, y, self.paint)
+
+    def clear(self):
+        self.canvas.clear(skia.ColorWHITE)
 
     def render(self, rewind=True):
+        """
+        Draw the path on current canvas using paint
+        """
         print(self.path.countVerbs())
         # print(self.canvas)
         print("RENDER NOW")

@@ -57,9 +57,19 @@ class SkiaSketch():
         self.frame_rate = frame_rate
         self.redraw = False
 
-        # Boolean to check when a window is resized completely
-        # Resizing depends on glfw callbacks, see the callback handlers
+        """
+        resized : (boolean) 
+        When we make a call to resize the window, it does not happen instantly
+        but rather glfw places the resize call on a different thread and later resizes the window 
+        and its framebuffer triggering their callbacks.
+        This boolean variable is used to keep track whether a resize call was made and the 
+        window is yet to be resized. If so, halt the rendering process and wait for the window to
+        be resized.
+        This is necessary to ensure correct no_loop() behaviour.
+        """
         self.resized = True
+
+        # builtins will be replaced later by a environment.py file
         builtins.frame_count = 0
 
     @property
@@ -102,6 +112,7 @@ class SkiaSketch():
         glfw.set_framebuffer_size_callback(self.window, self.frame_buffer_resize_callback_handler)
         glfw.set_mouse_button_callback(self.window, self.mouse_button_callback_handler)
 
+    # create a new surface everytime
     def create_surface(self, size=None):
         print("create surface")
         if not size:
@@ -130,10 +141,11 @@ class SkiaSketch():
 
         while (self.main_loop_state):
 
+            # if redraw is true then call the main rendering loop once
             if self.redraw:
                 self.looping = True
 
-            if self.looping and (time() - last_render_call_time) > 1 / self.frame_rate:
+            if self.resized and self.looping and (time() - last_render_call_time) > 1 / self.frame_rate:
                 builtins.frame_count += 1
                 with self.surface as self.canvas:
                     self.draw_method()
@@ -142,7 +154,8 @@ class SkiaSketch():
                 self.surface.flushAndSubmit()
                 glfw.swap_buffers(self.window)
                 last_render_call_time = time()
-                # If redraw = True, we have rendered the frame once
+
+                # If redraw == True, we have rendered the frame once
                 # Now don't render the next one
                 if self.redraw:
                     self.looping = False
@@ -165,9 +178,13 @@ class SkiaSketch():
         self.clean_up()
 
     def resize(self):
-        # re-create a new canvas with new size
-        self.create_surface()
+        # call change the window size(), this will not be done instantly
+        # but after some time and a frame_buffer_changed callback will occur on
+        # on a different thread
         glfw.set_window_size(self.window, *self.size)
+
+        # when glfw changes the framebuffer size, we will be resized completely
+        # until then hold the rendering calls
         self.resized = False
         print(glfw.get_framebuffer_size(self.window), self._size, glfw.get_window_size(self.window))
 
@@ -180,14 +197,19 @@ class SkiaSketch():
 
         # print("FRAME BUFFER CALLBACK NOW ")
         # print("frame buffer size callback ", glfw.get_window_size(self.window))
+
+        # Callback handler for frame buffer resize events
         GL.glViewport(0, 0, width, height)
         self.create_surface(size=(width, height))
-        with self.surface as self.canvas:
-            # redraw on the canvas/ ( new frame buffer ) after resizing
-            # and do not rewind/clear the path
-            p5.renderer.render(rewind=False)
-        self.surface.flushAndSubmit()
-        glfw.swap_buffers(self.window)
+        # with self.surface as self.canvas:
+        #     # redraw on the canvas/ ( new frame buffer ) after resizing
+        #     # and do not rewind/clear the path
+        #     p5.renderer.render(rewind=False)
+        # self.surface.flushAndSubmit()
+        # glfw.swap_buffers(self.window)
+
+        # Tell the program, we have resized the frame buffer
+        # Restart the rendering again
         self.resized = True
 
     def mouse_callback_handler(self, window, xpos, ypos):
