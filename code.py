@@ -11,7 +11,7 @@ def setup():
 
 
 def draw():
-    # p5.renderer.clear()
+    p5.renderer.clear()
     p5.renderer.render_circle(20,20, 30)
     p5.renderer.render_text("Left click to redraw", 100, 100)
     p5.renderer.render_text("Right click to loop again", 100, 150)

@@ -3,6 +3,8 @@ from OpenGL import GL
 
 from p5 import p5
 
+class StyleClas():
+    pass
 
 class SkiaRenderer():
     def __init__(self):
@@ -10,6 +12,9 @@ class SkiaRenderer():
         self.paint = None
         self.style = None
         self.path = None
+        self.font = skia.Font()
+        self.typeface = skia.Typeface.MakeDefault()
+        self.font.setTypeface(self.typeface)
 
     def initialize_renderer(self, canvas, paint, path):
         self.canvas = canvas
@@ -30,10 +35,12 @@ class SkiaRenderer():
         self.render()
 
     def render_text(self, text, x, y):
-        font = skia.Font()
-        self.canvas.drawSimpleText(text, x, y, font, self.paint)
-        print("Called render text")
-        # self.canvas.drawText(text, x, y, self.paint)
+        # full path works relative does not
+        # typeface = skia.Typeface.MakeFromFile('/home/tushar55/Desktop/LucidaSansRegular.ttf')
+        # assert (typeface is not None), "should not be NULL"
+
+        # handle alignment manually
+        self.canvas.drawSimpleText(text, x, y, self.font, self.paint)
 
     def clear(self):
         self.canvas.clear(skia.ColorWHITE)
