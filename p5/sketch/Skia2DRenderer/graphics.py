@@ -22,6 +22,7 @@ def draw_graphics(graphics):
     default_image_mode = _image_mode
     default_font = p5.renderer.font
     default_typeface = p5.renderer.typeface
+    default_style = p5.renderer.style
 
     # Replace with new values
     p5.renderer.canvas = graphics.canvas
@@ -29,6 +30,7 @@ def draw_graphics(graphics):
     p5.renderer.path = graphics.path
     p5.renderer.font = graphics.font
     p5.renderer.typeface = graphics.typeface
+    p5.renderer.style = graphics.style
     _image_mode = graphics._image_mode
 
     # draw to the graphics' canvas using path and
@@ -41,6 +43,7 @@ def draw_graphics(graphics):
     p5.renderer.path = default_path
     p5.renderer.font = default_font
     p5.renderer.typeface = default_typeface
+    p5.renderer.style = default_style
     _image_mode = default_image_mode
 
 class PGraphics():
@@ -48,9 +51,12 @@ class PGraphics():
         self.canvas = skia.Canvas(width, height)
         self.path = skia.Path()
         self.paint = skia.Paint()
-        # probably skia.font
+        self.font = skia.Font()
+        self.typeface = skia.Typeface.MakeDefault()
+        self.font.setTypeface(self.font)
         self._image_mode = 'CORNERS'
         self._blend_mode = None
+        self.style = None
         self.style_stack = []
         # .
         # .
