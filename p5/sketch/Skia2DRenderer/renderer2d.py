@@ -5,7 +5,7 @@ from OpenGL import GL
 from p5 import p5
 
 
-class StyleClas():
+class StyleClass():
     def __init__(self):
         self.style_stack = []
         self.isFill = True
@@ -13,13 +13,14 @@ class StyleClas():
         self.stroke_weight = 3
         self.fill_color = skia.ColorBLACK
         self.stroke_color = skia.ColorBLACK
+        # other properties
 
 
 class SkiaRenderer():
     def __init__(self):
         self.canvas = None
         self.paint = None
-        self.style = StyleClas()
+        self.style = StyleClass()
         self.path = None
         self.font = skia.Font()
         self.typeface = skia.Typeface.MakeDefault()
@@ -77,6 +78,9 @@ class SkiaRenderer():
 
     def set_font_size(self, size):
         self.font.setSize(size)
+
+    def render_image(self, img, *args):
+        self.canvas.drawImage(img, *args)
 
     def clear(self):
         self.canvas.clear(skia.ColorWHITE)

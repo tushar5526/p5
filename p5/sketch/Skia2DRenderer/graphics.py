@@ -1,8 +1,6 @@
 import skia, warnings
 from contextlib import contextmanager
-from p5.sketch.Vispy2DRenderer import renderer2d
-from p5.core import p5
-from p5.core.image import _image_mode
+from p5.sketch.Skia2DRenderer.renderer2d import StyleClass
 from p5 import *
 
 # A list which stores all the active PGraphics objects
@@ -23,7 +21,6 @@ def draw_graphics(graphics):
     default_font = p5.renderer.font
     default_typeface = p5.renderer.typeface
     default_style = p5.renderer.style
-
     # Replace with new values
     p5.renderer.canvas = graphics.canvas
     p5.renderer.paint = graphics.paint
@@ -32,11 +29,9 @@ def draw_graphics(graphics):
     p5.renderer.typeface = graphics.typeface
     p5.renderer.style = graphics.style
     _image_mode = graphics._image_mode
-
     # draw to the graphics' canvas using path and
     # paint
     yield
-
     # Reset them back to old values
     p5.renderer.canvas = default_canvas
     p5.renderer.paint = default_paint
@@ -48,7 +43,8 @@ def draw_graphics(graphics):
 
 class PGraphics():
     def __init__(self, width, height, *args):
-        self.canvas = skia.Canvas(width, height)
+        array = np.zeros((height, width, 4), dtype=np.uint8)
+        self.canvas = skia.Canvas(array)
         self.path = skia.Path()
         self.paint = skia.Paint()
         self.font = skia.Font()
@@ -57,13 +53,18 @@ class PGraphics():
         self._image_mode = 'CORNERS'
         self._blend_mode = None
         self.style = None
-        self.style_stack = []
+        self.style = StyleClass()
         # .
         # .
         # .
         active_pGraphics.append(self)
 
-    # wrapper around p5
+    # wrapper around p5, will be called like
+    # Pgraphics_Object.rect(0, 0, 100, 100)
+    def rect(self, *args):
+        with draw_graphics(self):
+            image(*args)
+
     def image(self, *args):
         with draw_graphics(self):
             image(*args)

@@ -1,0 +1,7 @@
+Came back after a long time.
+
+Currently font rendering, basic event and loop is done.
+
+Have to work on image and pgraphics.
+
+Again investigate begin shape and endshape apis.
