@@ -89,9 +89,9 @@ class SkiaRenderer():
         """
         Draw the path on current canvas using paint
         """
-        print(self.path.countVerbs())
+        # print(self.path.countVerbs())
         # print(self.canvas)
-        print("RENDER NOW")
+        # print("RENDER NOW")
         if self.style.isFill:
             self.paint.setStyle(skia.Paint.kFill_Style)
             self.paint.setColor(self.style.fill_color)
@@ -104,7 +104,7 @@ class SkiaRenderer():
             self.canvas.drawPath(self.path, self.paint)
 
         if rewind and p5.sketch.resized:
-            print("REWINDED")
+            # print("REWINDED")
             self.path.rewind()
 
         # Reset the font size back to default size
