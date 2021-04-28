@@ -7,5 +7,7 @@ def draw():
         exit()
     asfdasf
 
+aadsfas
+
 if __name__ == '__main__':
     run()
