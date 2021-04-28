@@ -21,5 +21,4 @@ jobs:
           sudo apt-get install python-opengl libglfw3 -y
       - name: Setup virtual frame buffer
       - uses: GabrielBB/xvfb-action@v1
-        with:
-          run: python sanityTest.py
+        run: python sanityTest.py
