@@ -5,6 +5,7 @@ def draw():
     print(frame_count)
     if frame_ount == 100:
         exit()
+    asfdasf
 
 if __name__ == '__main__':
     run()
