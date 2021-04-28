@@ -25,7 +25,7 @@ def draw():
     if frame_count == 1:
         no_loop()
     p5.renderer.render_circle(20,20, 30)
-
+    print("DRAW HEIHGT", height, width)
     # Enable this to render font
     render_font = True
     if render_font:
